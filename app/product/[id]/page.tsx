@@ -36,7 +36,10 @@ export async function generateMetadata(
     const id = params.id;
     // fetch data
     const product:any = await getProduct(id);
-    const title = product? product.product.title : 'Not found';
+    if (!product) return{
+        title:'AnimeEcom - Not found'
+    }
+    const title = product.product.title
     return {
     title: `AnimeEcom - ${title} `,
     }
