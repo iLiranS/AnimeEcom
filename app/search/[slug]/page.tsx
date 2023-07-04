@@ -13,7 +13,7 @@ export const generateMetadata = ({params}:{params:{slug:string}}) =>{
 
 
 // specific search  page 
-export async function getProducts(searchQuery:URLSearchParams){
+async function getProducts(searchQuery:URLSearchParams){
     try{
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?${searchQuery}`);
         if (response.status!=200 || !response.ok){

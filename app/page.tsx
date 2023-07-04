@@ -4,7 +4,7 @@ import MainHeader from "@/src/components/Main/MainHeader"
 import { notFound } from "next/navigation";
 
 
-export async function getProducts(searchQuery:URLSearchParams){
+async function getProducts(searchQuery:URLSearchParams){
   try{
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products`);
       if (response.status!=200 || !response.ok){

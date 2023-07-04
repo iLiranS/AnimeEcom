@@ -15,7 +15,7 @@ export const generateMetadata = ({params}:{params:{anime:string}}) =>{
 }
 
 // specific sub category page || should generate static params for each category.
-export async function getProducts(searchQuery:URLSearchParams){
+async function getProducts(searchQuery:URLSearchParams){
     try{
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/products?${searchQuery}`);
         if (response.status!=200 || !response.ok){
