@@ -31,19 +31,19 @@ async function getProduct(id:string){
     return product;
 }
 // metadata
-export async function generateMetadata(
-    { params }: Props): Promise<Metadata> {
-    const id = params.id;
-    // fetch data
-    const product:any = await getProduct(id);
-    if (!product) return{
-        title:'AnimeEcom - Not found'
-    }
-    const title = product.product.title
-    return {
-    title: `AnimeEcom - ${title} `,
-    }
-}
+// export async function generateMetadata(
+//     { params }: Props): Promise<Metadata> {
+//     const id = params.id;
+//     // fetch data
+//     const product:any = await getProduct(id);
+//     if (!product) return{
+//         title:'AnimeEcom - Not found'
+//     }
+//     const title = product.product.title
+//     return {
+//     title: `AnimeEcom - ${title} `,
+//     }
+// }
 
 
 
