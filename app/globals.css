@@ -2,26 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.softBorder{
+    @apply border-[1px]  border-mainBgDark/20 dark:border-mainBG/20 outline-none  rounded-md
+    ;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+.navContent{
+    @apply bg-mainBG dark:bg-mainBgDark softBorder  shadow-md p-2  w-[400px]
+        cursor-default absolute top-12 left-0  gap-4 grid grid-cols-2 z-40
+        data-[motion=from-start]:animate-enterFromLeft
+        data-[motion=from-end]:animate-enterFromRight 
+        data-[motion=to-start]:animate-exitToLeft 
+        data-[motion=to-end]:animate-exitToRight;
+}
+.AccordionTrigger[data-state='open'] > .AccordionChevron {
+    transform: rotate(180deg);
   }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}

@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// I just want products to be array of { itemId : id , amount : number , size?: number}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+
+model User {
+  clerkId      String         @id  @map("_id")
+  orders       Order[]
+}
+
+model Product{
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String    
+  description String
+  images      String[]
+  sizes       String[]
+  price       Float
+  category    String
+  anime       String
+  subcategory String
+  orders      ProductOrder[]
+}
+model ProductOrder {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  order       Order           @relation(fields: [orderId], references: [id])
+  orderId     String          @db.ObjectId
+  product     Product         @relation(fields: [productId], references: [id])
+  productId   String          @db.ObjectId
+  count      Int
+  size        String?
+}
+
+model Order {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt @default(now())
+  ownerId     String          
+  owner       User            @relation(fields: [ownerId], references: [clerkId])
+  status      String          @default("pending")
+  products    ProductOrder[]
+  totalPrice  Float
+}
