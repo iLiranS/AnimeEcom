@@ -32,9 +32,7 @@ async function getProduct(id:string){
 }
 // metadata
 export async function generateMetadata(
-    { params }: Props,
-    parent?: ResolvingMetadata
-    ): Promise<Metadata> {
+    { params }: Props): Promise<Metadata> {
     const id = params.id;
     // fetch data
     const product:any = await getProduct(id);
