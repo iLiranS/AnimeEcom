@@ -13,7 +13,7 @@ return (
                 ©2023 iLiranS. All rights Reserved
             </li>
             <li>
-                <AiFillGithub/>
+                <a href='https://github.com/iLiranS/AnimeEcom' target='_blank'><AiFillGithub/></a> 
             </li>
             <li onClick={themeObj.toggleTheme} 
             className={`${themeObj.theme === 'dark' ? 'rotate-0' : '-rotate-90'}  select-none items-center transition-all cursor-pointer`}>

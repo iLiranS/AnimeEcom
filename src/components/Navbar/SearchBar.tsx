@@ -5,10 +5,14 @@ import {LiaSearchSolid} from 'react-icons/lia'
 const SearchBar = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
+
+
     const formSubmitHandler = (event:React.FormEvent) =>{
         event.preventDefault();
-        const value = inputRef.current?.value.trim();
-        if(value) router.push(`/search/${value}`);
+        if (!inputRef.current) return;
+        inputRef.current.focus();
+        const value = inputRef.current.value.trim();
+        if(value.length>0) router.push(`/search/${value}`);
     }
 return (
     <form onSubmit={formSubmitHandler} className="softBorder w-max md:w-44 flex gap-1 items-center relative p-1
@@ -17,6 +21,7 @@ return (
         placeholder="Search products..." 
         type="search" 
         className="bg-transparent outline-none text-sm  w-0 md:w-full  focus:w-full"/>
+        
         <label htmlFor='searchbar'>
             <button className='bg-transparent outline-none border-none flex items-center'>
             <LiaSearchSolid className='font-bold' />

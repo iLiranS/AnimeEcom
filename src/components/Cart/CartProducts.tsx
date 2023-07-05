@@ -2,7 +2,7 @@
 import { Product, cartItem } from '@/models/models';
 import useCartStore from '@/store/useCartStore';
 import { getCartProducts } from '@/utils/functions';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import CartProduct from './CartProduct';
 import { useAuth } from '@clerk/nextjs';
 import { toast } from 'react-toastify';
@@ -23,6 +23,8 @@ const CartProducts = () =>
     const [isCheckoutLoading,setIsCheckoutLoading] = useState(false);
     const {userId,isLoaded} = useAuth();
     const router = useRouter();
+    const successNotify =useCallback (() => toast('Successfully ordered!',{type:'success',theme:theme}),[theme]);
+    const unAuthoNotify =useCallback (() => toast('Login first!',{type:'error',theme:theme}),[theme]);
 
     // for hydration
     useEffect(()=>{
@@ -30,7 +32,7 @@ const CartProducts = () =>
         setInitialCartLoad(true);
     },[cartObj.cart])
 
-    // initial products fetching, no need to refetch because initial include all.
+    // initial products fetching, no need for dependency of cartProducts because initial include all (can only remove from here).
     useEffect(()=>{
             if(!initialCartLoad) return; // if did not load cart yet, return.
 
@@ -41,9 +43,13 @@ const CartProducts = () =>
                 setProducts(res);
                 setIsLoading(false);
             }
-
+            // if state will be called after cartProducts updated.
         if (cartProducts.length>0){
             getProductsHandler();
+        }
+        // if after cartProducts called and empty, finish loading.
+        else{
+            setIsLoading(false); 
         }
         
     },[initialCartLoad])
@@ -59,20 +65,20 @@ const CartProducts = () =>
     },[cartProducts,products])
 
 
-
-    if (isLoading || !isLoaded) return( 
+    // if loading return skeleten
+    if (isLoading) return( 
     <div className='flex flex-col gap-2 relative   w-[80vw] min-w-[300px] max-w-[500px] mx-auto py-4'>
         <div className='bg-gray-600 animate-pulse w-full h-24 rounded-md'/>
         <div className='bg-gray-600 animate-pulse w-full h-24 rounded-md'/>
         <div className='bg-gray-600 animate-pulse w-full h-24 rounded-md'/>
         <div className='bg-gray-600 animate-pulse w-full h-24 rounded-md'/>
     </div>)
-
+// if not loading and no products
 if(cartProducts.length<1){
     return <p>Cart is empty...</p>
 }
 
-
+    // mapping products into components.
     const mappedProducts = cartProducts.map((cartProduct,index)=>
     {       
         if (!products || products.length<1) return <div key={index}>Cannot find product</div>
@@ -80,10 +86,10 @@ if(cartProducts.length<1){
         return <CartProduct updateCount={changeCountHandler} index={index} product={p} cartItem={cartProduct} key={index}/>
     }
     )
-
+    // demo checkout
     const checkOutDemoHandler = async() =>{
         if (isCheckoutLoading) return;
-        if (!userId) return;
+        if (!userId || !isLoaded){ unAuthoNotify(); return;}
         setIsCheckoutLoading(true);
         const fetchObject = {
             products:cartProducts,
@@ -103,9 +109,8 @@ if(cartProducts.length<1){
                 throw new Error('Failed posting order, watch server logs')
             }
             // successfully added order
-            const notify = () => toast('Successfully ordered!',{type:'success',theme:theme});
             cartObj.clearCart();
-            notify();
+            successNotify();
             router.push('/orders');
 
             
@@ -127,7 +132,7 @@ if(cartProducts.length<1){
             <section className='self-end'>
                 {!isCheckoutLoading
                 ?
-                <p onClick={checkOutDemoHandler} className='bg-orange-400 hover:scale-105 transition-transform font-bold px-4 py-2  rounded-md cursor-pointer'>Checkout</p>
+                <p onClick={checkOutDemoHandler} className={`${isLoaded ? 'bg-orange-400' : 'bg-gray-600 cursor-not-allowed'} hover:scale-105 transition-transform font-bold px-4 py-2  rounded-md cursor-pointer`}>Checkout</p>
                 :
                 <p  className='bg-orange-400/20 font-bold px-4 py-2  rounded-md cursor-progress'>Loading...</p>
                 }
